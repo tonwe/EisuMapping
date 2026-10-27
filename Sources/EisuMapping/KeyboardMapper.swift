@@ -93,13 +93,18 @@ final class KeyboardMapper {
             return false
         }
 
-        let modifiers: CGEventFlags = [.maskCommand, .maskControl, .maskAlternate, .maskShift, .maskSecondaryFn]
+        var modifiers: KeyMapping.Modifiers = []
+        if event.flags.contains(.maskShift) { modifiers.insert(.shift) }
+        if event.flags.contains(.maskCommand) { modifiers.insert(.command) }
+        if event.flags.contains(.maskControl) { modifiers.insert(.control) }
+        if event.flags.contains(.maskAlternate) { modifiers.insert(.option) }
+        if event.flags.contains(.maskSecondaryFn) { modifiers.insert(.function) }
         let keyCode = UInt16(truncatingIfNeeded: event.getIntegerValueField(.keyboardEventKeycode))
         let action = mapping.handle(
             keyCode: keyCode,
             isKeyDown: type == .keyDown,
             isRepeat: event.getIntegerValueField(.keyboardEventAutorepeat) != 0,
-            hasModifiers: !event.flags.intersection(modifiers).isEmpty
+            modifiers: modifiers
         )
 
         switch action {
@@ -109,6 +114,14 @@ final class KeyboardMapper {
             }
             return false
         case .suppress:
+            return true
+        case .switchApplication(let direction):
+            let keyName = keyCode == 0x66 ? "Shift + 英数" : "Shift + かな"
+            // Activate after returning from the tap, with no synthetic modifiers.
+            DispatchQueue.main.async { [weak self] in
+                guard let self, isEnabled, isRunning else { return }
+                report("\(keyName)：\(ApplicationSwitcher.switchApplication(direction))")
+            }
             return true
         case .switchWindow(let direction):
             let keyName = keyCode == 0x66 ? "英数" : "かな"

@@ -1,4 +1,4 @@
-public enum WindowCycle {
+public enum SwitchCycle {
     public static func destination(count: Int, current: Int?, direction: KeyMapping.Direction) -> Int? {
         guard count > 1 else { return nil }
         guard let current, (0..<count).contains(current) else {

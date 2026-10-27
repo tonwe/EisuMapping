@@ -49,6 +49,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "英数 → 当前应用的上一个窗口", action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "かな → 当前应用的下一个窗口", action: nil, keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "⇧ 英数 → 上一个应用", action: nil, keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "⇧ かな → 下一个应用", action: nil, keyEquivalent: ""))
         menu.addItem(.separator())
         toggleItem.target = self
         permissionItem.target = self

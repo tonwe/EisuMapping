@@ -47,7 +47,7 @@ actor WindowSwitcher {
         let current = focused.flatMap { focused in
             orderedWindows.firstIndex { CFEqual($0, focused) }
         }
-        guard let index = WindowCycle.destination(count: orderedWindows.count, current: current, direction: direction)
+        guard let index = SwitchCycle.destination(count: orderedWindows.count, current: current, direction: direction)
         else {
             return orderedWindows.isEmpty ? "未找到可切换的窗口" : "只有一个可切换窗口"
         }
